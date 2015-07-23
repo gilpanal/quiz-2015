@@ -40,7 +40,25 @@ var Quiz = sequelize.import(quiz_path);
 exports.Quiz = Quiz; // exportar definicion de la tabla Quiz
 
 // sequelize.sync() crea e inicializa tabla de preguntas en DB
-sequelize.sync().success(function(){
+sequelize.sync().then(function(){
+	
+	// then(..) ejecuta el manejador una vez creada la tabla
+	Quiz.count().then(function(count){
+		
+		// la tabla se inicializa solo si está vacia
+		if(count === 0){
+
+			Quiz.create({pregunta:'Capital de Italia',
+				respuesta:'Roma'});
+			Quiz.create({pregunta:'Capital de Portugal',
+				respuesta:'Lisboa'}).then(function(){
+					console.log('La base de datos de virus ha sido actualizada');
+				});
+		}
+		
+	});
+});
+/*sequelize.sync().success(function(){
 	
 	// success(..) ejecuta el manejador una vez creada la tabla
 	Quiz.count().success(function(count){
@@ -54,4 +72,4 @@ sequelize.sync().success(function(){
 		}
 
 	});
-});
+});*/
