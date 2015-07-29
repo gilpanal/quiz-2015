@@ -57,8 +57,6 @@ exports.show = function(req, res){
 	//});
 };
 
-
-
 // GET /quizes/:id/answer
 exports.answer = function(req, res){
 
