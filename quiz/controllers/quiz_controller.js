@@ -27,23 +27,37 @@ exports.load = function(req, res, next, quizId){
 };
 // GET /quizes
 exports.index = function(req, res){
-
-	models.Quiz.findAll().then(
+	if (req.query.search) {
+		var search = req.query.search;
+		search = search.replace('/ /g', '%');
+		search = '%' + search + '%';
+		models.Quiz.findAll({ where: ["pregunta like ?", search], order: 'pregunta ASC' }).then(function(quizes) {
+			res.render ('quizes/index.ejs', {quizes:quizes});
+		}).catch(function(error) { next(error); });
+	} else {
+		models.Quiz.findAll().then(function(quizes) {
+			res.render ('quizes/index.ejs', {quizes:quizes});
+		}).catch(function(error) { next(error); });
+	}
+	/*models.Quiz.findAll().then(
 		function(quizes){
 			//res.render('quizes/index.ejs', {quizes: quizes});
 			res.render('quizes/index', {quizes: quizes});
 		}
-	).catch(function(error){next(error);});
+	).catch(function(error){next(error);});*/
 };
+
 
 // GET /quizes/:id
 exports.show = function(req, res){
-
+	
 	res.render('quizes/show', {quiz:req.quiz});
 	//models.Quiz.find(req.params.quizId).then(function(quiz){
 	//	res.render('quizes/show', {quiz:quiz});
 	//});
 };
+
+
 
 // GET /quizes/:id/answer
 exports.answer = function(req, res){
