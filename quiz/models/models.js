@@ -49,9 +49,9 @@ sequelize.sync().then(function(){
 		if(count === 0){
 
 			Quiz.create({pregunta:'Capital de Italia',
-				respuesta:'Roma'});
+				respuesta:'Roma', categoria:'Humanidades'});
 			Quiz.create({pregunta:'Capital de Portugal',
-				respuesta:'Lisboa'}).then(function(){
+				respuesta:'Lisboa', categoria:'Humanidades'}).then(function(){
 					console.log('La base de datos de virus ha sido actualizada');
 				});
 		}
