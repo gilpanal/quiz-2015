@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Helpers dinamicos:
 app.use(function(req,res, next){
-
+     
     // guardar pathen session.redir para despues de login
     if(!req.path.match(/\/login|\/logout/)){
         req.session.redir = req.path;
@@ -40,7 +40,17 @@ app.use(function(req,res, next){
     // Hacer visible req.session en las vistas
     res.locals.session = req.session;
     next();
-})
+});
+
+// auto-logout
+app.use(function(req,res, next){
+  
+    var twominutes = 2* 60000;
+    req.session.cookie.expires = new Date(Date.now() + twominutes);
+    req.session.cookie.maxAge = twominutes;    
+    next();
+});
+
 
 app.use('/', routes);
 
@@ -76,6 +86,5 @@ app.use(function(err, req, res, next) {
         errors:[]
     });
 });
-
 
 module.exports = app;
